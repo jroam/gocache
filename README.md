@@ -1,2 +1,2 @@
 # gocache
-a simple package for go
+a simple package for go.
