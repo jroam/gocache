@@ -12,7 +12,25 @@ type Cache interface {
 	Delete(key interface{}) error
 }
 
+var drivers = map[string]Cache{
+	"file": file.New(),
+}
+
+//	func New(driver string) Cache {
+//		return drivers[driver]
+//	}
+func Set(key, value interface{}) error {
+	return drivers["file"].Set(key, value)
+}
+
+//	func SetWithExpire(key, value interface{}, expiration time.Duration) error {
+//		return file.New().SetWithExpire(key, value, expiration)
+//	}
+func Delete(key interface{}) error {
+	return drivers["file"].Delete(key)
+}
+
 func Get(key interface{}) interface{} {
-	return file.New().Get(key)
+	return drivers["file"].Get(key)
 
 }
