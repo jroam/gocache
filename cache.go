@@ -6,21 +6,33 @@ import (
 )
 
 type Cache interface {
-	Set(key, value interface{}) error
+	Set(key, value interface{}, expire ...time.Duration) error
 	SetWithExpire(key, value interface{}, expiration time.Duration) error
 	Get(key interface{}) interface{}
 	Delete(key interface{}) error
 }
 
-var drivers = map[string]Cache{
+var entity *Cache
+
+// 配置项
+type Config struct {
+	Type string `json:"type"`
+}
+
+var drivers = map[string]*Cache{
 	"file": file.New(),
+}
+
+func Init(config *Config) *Cache {
+	entity = drivers[config.Type]
+	return entity
 }
 
 //	func New(driver string) Cache {
 //		return drivers[driver]
 //	}
-func Set(key, value interface{}) error {
-	return drivers["file"].Set(key, value)
+func Set(key, value interface{}, expire ...time.Duration) error {
+	return entity.Set(key, value, expire...)
 }
 
 //	func SetWithExpire(key, value interface{}, expiration time.Duration) error {
